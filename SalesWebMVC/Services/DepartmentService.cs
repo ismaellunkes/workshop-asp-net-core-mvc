@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SalesWebMVC.Services
 {
@@ -15,12 +16,13 @@ namespace SalesWebMVC.Services
             _context = context;
         }
 
-        public List<Department> FindAll()
+
+        public async Task<List<Department>> FindAllAsync()
         {
-            return _context.Department.OrderBy(x => x.name).ToList();
+            return await _context.Department.OrderBy(x => x.name).ToListAsync();
         }
 
-        public void Insert(Seller obj)
+        public void Insert(Department obj)
         {           
             _context.Add(obj);
             _context.SaveChanges();
