@@ -72,8 +72,15 @@ namespace SalesWebMVC.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await _sellerService.RemoveAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _sellerService.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (IntegrityException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -114,7 +121,7 @@ namespace SalesWebMVC.Controllers
         }
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Edit (int id, Seller seller)
+        public async Task<IActionResult> Edit(int id, Seller seller)
         {
             ///Serve para habilitar as validações se o JavScript tiver desabilitado no navegador do user
             if (!ModelState.IsValid)
@@ -131,11 +138,12 @@ namespace SalesWebMVC.Controllers
             try
             {
                 await _sellerService.UpdateAsync(seller);
-            }catch (ApplicationException e)
+            }
+            catch (ApplicationException e)
             {
                 return RedirectToAction(nameof(Error), new { message = e.Message });
             }
-           
+
             return RedirectToAction(nameof(Index));
         }
 
