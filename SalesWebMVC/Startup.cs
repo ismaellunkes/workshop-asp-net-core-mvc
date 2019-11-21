@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using SalesWebMVC.Models;
 using SalesWebMVC.Data;
 using SalesWebMVC.Services;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace SalesWebMVC.Models.ViewModels
 {
@@ -53,6 +55,15 @@ namespace SalesWebMVC.Models.ViewModels
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seedingService)
         {
+            var enUs = new CultureInfo("en-US");
+            var localizationOption = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture (enUs),
+                SupportedCultures = new List<CultureInfo> {enUs},
+                SupportedUICultures = new List<CultureInfo> {enUs}
+            };
+            app.UseRequestLocalization(localizationOption);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
